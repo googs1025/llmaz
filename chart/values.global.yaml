@@ -5,6 +5,7 @@ backendRuntime:
 
 leaderWorkerSet:
   install: true
+  namespace: llmaz-system
 
 controllerManager:
   manager:

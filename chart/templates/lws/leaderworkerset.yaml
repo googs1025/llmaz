@@ -25,7 +25,7 @@ spec:
       clientConfig:
         service:
           name: lws-webhook-service
-          namespace: lws-system
+          namespace: {{ .Values.leaderWorkerSet.namespace | default "lws-system" }}
           path: /convert
       conversionReviewVersions:
       - v1
@@ -15490,7 +15490,7 @@ metadata:
     app.kubernetes.io/name: serviceaccount
     app.kubernetes.io/part-of: lws
   name: lws-controller-manager
-  namespace: lws-system
+  namespace: {{ .Values.leaderWorkerSet.namespace | default "lws-system" }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -15503,7 +15503,7 @@ metadata:
     app.kubernetes.io/name: role
     app.kubernetes.io/part-of: lws
   name: lws-leader-election-role
-  namespace: lws-system
+  namespace: {{ .Values.leaderWorkerSet.namespace | default "lws-system" }}
 rules:
 - apiGroups:
   - ""
@@ -15722,7 +15722,7 @@ metadata:
     app.kubernetes.io/name: rolebinding
     app.kubernetes.io/part-of: lws
   name: lws-leader-election-rolebinding
-  namespace: lws-system
+  namespace: {{ .Values.leaderWorkerSet.namespace | default "lws-system" }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -15730,7 +15730,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: lws-controller-manager
-  namespace: lws-system
+  namespace: {{ .Values.leaderWorkerSet.namespace | default "lws-system" }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -15750,7 +15750,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: lws-controller-manager
-  namespace: lws-system
+  namespace: {{ .Values.leaderWorkerSet.namespace | default "lws-system" }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -15770,13 +15770,13 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: lws-controller-manager
-  namespace: lws-system
+  namespace: {{ .Values.leaderWorkerSet.namespace | default "lws-system" }}
 ---
 apiVersion: v1
 kind: Secret
 metadata:
   name: lws-webhook-server-cert
-  namespace: lws-system
+  namespace: {{ .Values.leaderWorkerSet.namespace | default "lws-system" }}
 ---
 apiVersion: v1
 kind: Service
@@ -15790,7 +15790,7 @@ metadata:
     app.kubernetes.io/part-of: lws
     control-plane: controller-manager
   name: lws-controller-manager-metrics-service
-  namespace: lws-system
+  namespace: {{ .Values.leaderWorkerSet.namespace | default "lws-system" }}
 spec:
   ports:
   - name: https
@@ -15811,7 +15811,7 @@ metadata:
     app.kubernetes.io/name: service
     app.kubernetes.io/part-of: lws
   name: lws-webhook-service
-  namespace: lws-system
+  namespace: {{ .Values.leaderWorkerSet.namespace | default "lws-system" }}
 spec:
   ports:
   - port: 443
@@ -15832,7 +15832,7 @@ metadata:
     app.kubernetes.io/part-of: lws
     control-plane: controller-manager
   name: lws-controller-manager
-  namespace: lws-system
+  namespace: {{ .Values.leaderWorkerSet.namespace | default "lws-system" }}
 spec:
   replicas: 1
   selector:
@@ -15850,9 +15850,10 @@ spec:
         - --health-probe-bind-address=:8081
         - --metrics-bind-address=127.0.0.1:8080
         - --leader-elect
+        - --namespace={{ .Values.leaderWorkerSet.namespace | default "lws-system" }}
         command:
         - /manager
-        image: registry.k8s.io/lws/lws:v0.3.0
+        image: registry.k8s.io/lws/lws:v0.4.2
         livenessProbe:
           httpGet:
             path: /healthz
@@ -15925,7 +15926,7 @@ webhooks:
   clientConfig:
     service:
       name: lws-webhook-service
-      namespace: lws-system
+      namespace: {{ .Values.leaderWorkerSet.namespace | default "lws-system" }}
       path: /mutate-leaderworkerset-x-k8s-io-v1-leaderworkerset
   failurePolicy: Fail
   name: mleaderworkerset.kb.io
@@ -15945,7 +15946,7 @@ webhooks:
   clientConfig:
     service:
       name: lws-webhook-service
-      namespace: lws-system
+      namespace: {{ .Values.leaderWorkerSet.namespace | default "lws-system" }}
       path: /mutate--v1-pod
   failurePolicy: Fail
   name: mpod.kb.io
@@ -15975,7 +15976,7 @@ webhooks:
   clientConfig:
     service:
       name: lws-webhook-service
-      namespace: lws-system
+      namespace: {{ .Values.leaderWorkerSet.namespace | default "lws-system" }}
       path: /validate-leaderworkerset-x-k8s-io-v1-leaderworkerset
   failurePolicy: Fail
   name: vleaderworkerset.kb.io
@@ -15995,7 +15996,7 @@ webhooks:
   clientConfig:
     service:
       name: lws-webhook-service
-      namespace: lws-system
+      namespace: {{ .Values.leaderWorkerSet.namespace | default "lws-system" }}
       path: /validate--v1-pod
   failurePolicy: Fail
   name: vpod.kb.io
