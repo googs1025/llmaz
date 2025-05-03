@@ -1,0 +1,58 @@
+{{- if .Values.backendRuntime.enabled -}}
+apiVersion: inference.llmaz.io/v1alpha1
+kind: BackendRuntime
+metadata:
+  labels:
+    app.kubernetes.io/name: backendruntime
+    app.kubernetes.io/part-of: llmaz
+    app.kubernetes.io/created-by: llmaz
+  name: internlm2
+spec:
+  command:
+    - /bin/sh
+    - -c
+  image: {{ .Values.backendRuntime.internlm2.image.repository }}
+  version: {{ .Values.backendRuntime.internlm2.image.tag }}
+  # Do not edit the preset argument name unless you know what you're doing.
+  # Free to add more arguments with your requirements.
+  envs:
+    - name: NCCL_LAUNCH_MODE
+      value: GROUP
+  recommendedConfigs:
+    - name: default
+      args:
+        - lmdeploy
+        - serve
+        - api_server
+        - "{{`{{ .ModelPath }}`}}"
+        - --model-name
+        - "{{`{{ .ModelName }}`}}"
+        - --server-name
+        - "0.0.0.0"
+        - --server-port
+        - "8080"
+      sharedMemorySize: 2Gi
+      resources:
+        requests:
+          cpu: 8
+          memory: 16Gi
+        limits:
+          cpu: 8
+          memory: 16Gi
+  livenessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 900
+    periodSeconds: 20
+    successThreshold: 1
+    tcpSocket:
+      port: main
+    timeoutSeconds: 1
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 400
+    periodSeconds: 10
+    successThreshold: 1
+    tcpSocket:
+      port: main
+    timeoutSeconds: 1
+{{- end }}

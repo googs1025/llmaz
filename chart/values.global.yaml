@@ -23,6 +23,11 @@ backendRuntime:
       repository: vllm/vllm-openai
       tag: v0.7.3
 
+  internlm2:
+    image:
+      repository: openmmlab/lmdeploy
+      tag: latest
+
 leaderWorkerSet:
   enabled: true
   namespace: "llmaz-system"
