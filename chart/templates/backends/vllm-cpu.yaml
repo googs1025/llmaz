@@ -51,11 +51,11 @@ spec:
       sharedMemorySize: 2Gi
       resources:
         requests:
-          cpu: 4
-          memory: 8Gi
+          cpu: 10
+          memory: 32Gi
         limits:
-          cpu: 4
-          memory: 8Gi
+          cpu: 10
+          memory: 32Gi
   startupProbe:
     periodSeconds: 10
     failureThreshold: 30
