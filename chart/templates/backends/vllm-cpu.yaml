@@ -38,8 +38,6 @@ spec:
   recommendedConfigs:
     - name: default
       args:
-        - --ip
-        - "host"
         - --model
         - "{{`{{ .ModelPath }}`}}"
         - --served-model-name
